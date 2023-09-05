@@ -13,8 +13,8 @@ public class TransactionService {
         this.transactionRepository = transactionRepository;
     }
 
-    public Transaction findByTransactionNumber(String transactionNumber){
-        return transactionRepository.findByTransactionNumber(transactionNumber);
+    public Transaction findByTransactionId(Long transactionId){
+        return transactionRepository.findById(transactionId).orElse(null);
     }
     public void saveTransaction(Transaction transaction){
         transactionRepository.save(transaction);

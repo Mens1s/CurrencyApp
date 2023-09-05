@@ -2,6 +2,7 @@ package com.example.mens1s.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
@@ -12,12 +13,11 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
-    private String id;
+    private Long id;
 
-    @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="user_id")
-    @JsonBackReference
+    @JsonIgnoreProperties("transactions")
     private User user;
 
     @Column(name="volume_of_coin")
@@ -27,8 +27,8 @@ public class Transaction {
     @Column(name="volume_of_dolar")
     private String volume_of_dolar;
 
-    @Column(name="transaction_number")
-    private String transactionNumber;
+    @Column(name="type")
+    private String type;
 
     /*
     {
