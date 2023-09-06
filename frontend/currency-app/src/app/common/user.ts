@@ -37,12 +37,12 @@ export class User {
     }
   
     // Convert JSON string to a Map object
-    getBalances(): Map<string, number> {
+    public getBalances(): Map<string, number> {
       return JSON.parse(this.balancesJson);
     }
   
     // Convert a Map object to a JSON string
-    setBalances(balances: Map<string, number>): void {
+    public setBalances(balances: Map<string, number>): void {
       this.balancesJson = JSON.stringify(balances);
     }
   }

@@ -16,7 +16,6 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     this.userService.checkLoginStatus();
     if(this.authService.isLoggedIn()){
-      console.log("dsadsa");
       this.router.navigate(['dashboard']);
     }
     else{
@@ -25,11 +24,13 @@ export class RegisterComponent implements OnInit {
       })
     }
   }
-
-  public register(firstName :string, lastName :string, username: string, tel :string, email :string, password :string, passwordRetype :string){
+  delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
+  }
+  public async register(firstName :string, lastName :string, username: string, tel :string, email :string, password :string, passwordRetype :string){
     this.userService.register(firstName,lastName,username,tel,email,password,passwordRetype);
-    if(this.userService.getRegisterBoolean()){
-      this.router.navigate(['']);
-    }
+    await this.delay(100);
+    this.router.navigate(['']);
+
   }
 }

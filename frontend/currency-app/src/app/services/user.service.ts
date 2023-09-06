@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
-import { User } from '../common/user'; // Import the User model
+import { Transaction, User } from '../common/user'; // Import the User model
 import { map } from 'rxjs/operators'; // Import the map operator
 import { AuthService } from './auth.service';
 
@@ -10,7 +10,11 @@ import { AuthService } from './auth.service';
 })
 export class UserService {
   private user: any;
+
   private loginStatus = new Subject<string>();
+  private transactionStatus = new Subject<string>(); 
+  private transactionStatus_coin = new Subject<string>(); 
+
   private registerStatus = new Subject<string>();
   private registerBoolean = false;
 
@@ -61,11 +65,9 @@ export class UserService {
 
       this.http.post<User>(url, registerData).subscribe(
         (response: User) => {
-          this.setUser(response);
-          this.registerStatus.next("Giriş Başarılı!");
-          this.authService.login();
-          this.setLoginStatusInLocalStorage(true, response);
+          this.registerStatus.next("Kayıt Olma Başarılı!");
           this.registerBoolean = true;
+          this.login(username,password);
         },
         (error) => {
           console.error("Login error:", error);
@@ -109,14 +111,96 @@ export class UserService {
     }
   }
 
+  public buy(volume_of_coin:string, coin_name:string, volume_of_dolar:string){
+      const transactionData = {
+          "volume_of_coin": volume_of_coin,
+          "coin_name": coin_name,
+          "volume_of_dolar": volume_of_dolar,
+          "type": "buy",
+          "user": {
+              "id": this.user.id
+          }
+        }
+
+      console.log(transactionData);  
+      
+      const url = "http://localhost:8080/api/transactions/buy";
+
+      this.http.post(url, transactionData, { responseType: 'text' }).subscribe(
+        (response: string) => {
+          // Check if the response message indicates success
+          if (response.includes("Transaction created successfully")) {
+            console.log('Transaction created successfully');
+            this.transactionStatus.next("İşlem Başarılı!");
+            this.updateUser();
+          } else {
+            console.log('Unexpected response:', response);
+            // Handle unexpected response here
+            this.transactionStatus.next("Hatali İşlem");
+          }
+        },
+        (error) => {
+          console.log('Error:', error);
+          this.transactionStatus.next("Hatali İşlem");
+        }
+      );
+    }
+
+    public sell(volume_of_coin:string, coin_name:string, volume_of_dolar:string){
+      const transactionData = {
+          "volume_of_coin": volume_of_coin,
+          "coin_name": coin_name,
+          "volume_of_dolar": volume_of_dolar,
+          "type": "sell",
+          "user": {
+              "id": this.user.id
+          }
+        }
+      
+      console.log(transactionData);  
+      
+      const url = "http://localhost:8080/api/transactions/sell";
+
+      this.http.post(url, transactionData, { responseType: 'text' }).subscribe(
+        (response: string) => {
+          // Check if the response message indicates success
+          if (response.includes("Transaction created successfully")) {
+            console.log('Transaction created successfully');
+            this.transactionStatus_coin.next("İşlem Başarılı!");
+            this.updateUser();
+          } else {
+            console.log('Unexpected response:', response);
+            // Handle unexpected response here
+            this.transactionStatus_coin.next("Hatali İşlem");
+          }
+        },
+        (error) => {
+          console.log('Error:', error);
+          this.transactionStatus_coin.next("Hatali İşlem");
+        }
+      );
+    }
+
+  private updateUser(){
+    this.login(this.user.username, this.user.password);
+  }
+
   public getRegisterBoolean(){
     return this.registerBoolean;
   }
 
+  public getTransactionStatus(){
+    return this.transactionStatus;
+  }
+
+  public getTransactionStatus_coin(){
+    return this.transactionStatus_coin;
+  }
   public logout(){
     localStorage.removeItem('loginData');
     this.authService.logout();
     this.user = null;
+
   }
 
   getLoginStatus() {

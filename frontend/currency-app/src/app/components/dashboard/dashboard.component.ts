@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
 import { Transaction, User } from 'src/app/common/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { CurrenciesService } from 'src/app/services/currencies.service';
@@ -16,7 +17,13 @@ export class DashboardComponent implements OnInit {
   public transactionNumber = 0;
   public curr : any;
 
-  constructor(private userService: UserService, private currService: CurrenciesService, private authService: AuthService, private router: Router) {
+
+  constructor(private userService: UserService, 
+              private currService: CurrenciesService, 
+              private authService: AuthService, 
+              private router: Router, 
+              private route: ActivatedRoute) {
+                
     if(!this.authService.isLoggedIn()){
       router.navigate([""]);
     }
@@ -31,7 +38,6 @@ export class DashboardComponent implements OnInit {
       this.transactionNumber = 0;
     }
 
-    console.log(this.curr);
   }
 
   public setCurr(curr: any){
@@ -39,7 +45,9 @@ export class DashboardComponent implements OnInit {
   }
   ngOnInit(): void {
     this.loadCurr();
-    console.log(this.curr);
+  
+    this.router.navigate(["dashboard"])
+    
   }
   
   async loadCurr(){
@@ -48,5 +56,21 @@ export class DashboardComponent implements OnInit {
 
   public logout(){
     this.userService.logout();
+    this.router.navigate(['']);
   }
+  public doSearch(value:string){
+    this.goTransactionPage(value);
+  }
+  public goTransactionPage(value: any) {
+    const info = value+','+this.curr[value];
+
+    this.currService.setUpdatedInformations(info);
+    
+    this.router.navigate(['dashboard', value],
+    {
+      skipLocationChange: true,
+    })
+
+  }
+
 }

@@ -1,0 +1,102 @@
+<div class="row">
+
+    <div class="col-lg-10 ml-3 ">
+
+        <!-- Default Card Example -->
+        <div class="card mb-4">
+            <div class="card-header">
+                Satın Alma İşlemleri
+            </div>
+            <div class="card-body">
+                <div class = "row">
+                    <div class="col-lg-6">
+                        <button  class="btn btn-lg btn-primary">{{ currName }} Coin Satın Alma İşlemi</button>
+                        <br>
+                        <button  class="btn btn-lg btn-success mt-4">Anlık fiyatı : {{ currPrice  }}$</button>
+                        <br>
+                        <button  class="btn btn-lg btn-success mt-4" [value]="balance">Bakiyende Bulunan Miktar : {{ balance }} $</button>
+
+                    </div>
+                    <div class=col-lg-6>
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">Satın Al!</h1>
+                            </div>
+                            <form class="user">
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user" 
+                
+                                    placeholder="Almak istediğiniz miktarı giriniz" [(ngModel)]="miktar" (input)="calculateDollarEquivalent()" name="miktar">
+                                </div>
+                                <div class="form-group" [ngClass]="affordableStatusClass">
+                                    <input type="text" class="form-control form-control-user" [ngClass]="affordableStatusClass"
+                                    placeholder="Dolar Bazında Karşılığı : $" [value]="dolarKarsiligi.toFixed(2)" readonly name="dolarKarsiligi">
+                                </div>
+                                
+                                <button (click)="buy()" class="btn btn-primary btn-user btn-block">
+                                    Satın Al
+                                </button>
+                                <hr>
+                                <div *ngIf="transactionStatus" class="alert " [ngClass]="transactionStatusClass" >{{ transactionStatus }}</div>
+                            </form>
+                            <hr>
+                           
+                        </div>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                Coin Satma İşlemleri
+            </div>
+            <div class="card-body">
+                <div class = "row">
+                    <div class="col-lg-6">
+                        <button  class="btn btn-lg btn-primary">{{ currName }} Coin Satma İşlemi</button>
+                        <br>
+                        <button  class="btn btn-lg btn-success mt-4">Anlık fiyatı : {{ currPrice  }}$</button>
+                        <br>
+                        <button  class="btn btn-lg btn-success mt-4" [value]="availableCurrency">Bakiyende Bulunan Miktar : {{ availableCurrency }} Adet</button>
+
+                    </div>
+                    <div class=col-lg-6>
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">Satış Yap!</h1>
+                            </div>
+                            <form class="user">
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user" 
+                
+                                    placeholder="Satmak istediğiniz miktarı giriniz" [(ngModel)]="miktar_coin" (input)="calculateDollarEquivalent_coin()" name="miktar_coin">
+                                </div>
+                                <div class="form-group" [ngClass]="affordableStatusClass">
+                                    <input type="text" class="form-control form-control-user" [ngClass]="affordableStatusClass"
+                                    placeholder="Dolar Bazında Karşılığı : $" [value]="dolarKarsiligi_coin.toFixed(2)" readonly name="dolarKarsiligi_coin">
+                                </div>
+                                
+                                <button (click)="sell()" class="btn btn-primary btn-user btn-block">
+                                    Satış Yap
+                                </button>
+                                <hr>
+                                <div *ngIf="transactionStatus_coin" class="alert " [ngClass]="transactionStatusClass" >{{ transactionStatus_coin }}</div>
+                            </form>
+                            <hr>
+                           
+                        </div>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+
+    
+
+</div>
+

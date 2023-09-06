@@ -1,15 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Currencies } from '../common/currencies';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { Observable, Subject, catchError, map, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CurrenciesService {
   private currencies: any;
+  private currentTransaction: any;
+  private infoStatus = new Subject<string>(); 
 
-  constructor(private http: HttpClient) { }
+
+  constructor(private http: HttpClient) {
+   }
 
   public getCurrencies(): Observable<any> {
     const url = "http://localhost:8080/api/currencies";
@@ -43,5 +47,18 @@ export class CurrenciesService {
     // Convert the Observable to a Promise
     await this.getCurrencies().toPromise();
     return this.currencies;
+  }
+
+  public setUpdatedInformations(info:any){
+    this.infoStatus.next(info);
+    this.currentTransaction= info;
+  }
+
+  public getInfoStatus(){
+    return this.infoStatus;
+  }
+
+  public getUpdatedInformations(){
+    return this.currentTransaction;
   }
 }

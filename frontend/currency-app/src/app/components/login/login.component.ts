@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AppComponent } from '../../app.component';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
@@ -30,12 +29,15 @@ export class LoginComponent implements OnInit {
       }
     })
 
-    
-
+  }
+  delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
   }
 
-  login(username: String, password: String){
-    this.userService.login(username, password)
+  async login(username: String, password: String){
+    await this.userService.login(username, password);
+    await this.delay(1000);
+    this.router.navigate(['dashboard']);
   }
   
 

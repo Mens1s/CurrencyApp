@@ -1,6 +1,4 @@
 package com.example.mens1s.controller;
-
-
 import com.example.mens1s.model.Transaction;
 import com.example.mens1s.model.User;
 import com.example.mens1s.repository.UserRepository;
@@ -11,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-
+@CrossOrigin("http://localhost:4200")
 @RestController
 @RequestMapping("/api/transactions")
 public class TransactionController {
