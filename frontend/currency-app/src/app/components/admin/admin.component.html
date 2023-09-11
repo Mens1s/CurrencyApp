@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Mens1s Currency App</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+<p>hello world</p>
+
+  <div class="row">
+
+    <!-- Area Chart -->
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div
+                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Son İşlemlerim</h6>
+                <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+
+                </div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <table class="table table-borderless">
+                  <thead>
+                    <th scope="col">Kullanıcı ID'si</th>
+                    <th scope="col">Kullanıcı Adı</th>
+                    <th scope="col">Kullanıcı Soyadı</th>
+                    <th scope="col">Kullanıcı Telefon Numarası</th>
+                    <th scope="col">Kullanıcı Bakiyesi</th>
+                    <th scope="col">İşlemler</th> <!-- Add a new header column for actions -->
+                  </thead>
+                  <tbody>
+                    <!-- Loop through the users and display each user in a row -->
+                    <tr *ngFor="let user of users; let i = index">
+                      <!-- Display user ID -->
+                      <td>{{ user.id }}</td>
+                      
+                      <!-- Display user name or edit field based on edit mode array -->
+                      <td #nameInput >
+                        <ng-container *ngIf="!editMode[i]; else editField0">
+                          {{ user.name }}
+                        </ng-container>
+                        <ng-template #editField0>
+                          <input type="text" [(ngModel)]="user.name" />
+                        </ng-template>
+                      </td>
+                    
+
+                      <td #surnameInput >
+                        <ng-container *ngIf="!editMode[i]; else editField1">
+                          {{ user.surname }}
+                        </ng-container>
+                        <ng-template #editField1>
+                          <input type="text" [(ngModel)]="user.surname" />
+                        </ng-template>
+                      </td>
+
+                      <td #phoneInput >
+                        <ng-container *ngIf="!editMode[i]; else editField2">
+                          {{ user.phone }}
+                        </ng-container>
+                        <ng-template #editField2>
+                          <input type="number" [(ngModel)]="user.phone" />
+                        </ng-template>
+                      </td>
+
+                      <td #balanceInput >
+                        <ng-container *ngIf="!editMode[i]; else editField3">
+                          {{ user.balance }}
+                        </ng-container>
+                        <ng-template #editField3>
+                          <input type="number" [(ngModel)]="user.balance" />
+                        </ng-template>
+                      </td>
+                      
+                      <td>
+                        <!-- Button to toggle edit mode -->
+                        <button (click)="toggleEditMode(i)">
+                          {{ editMode[i] ? 'İptal' : 'Değiştir' }}
+                        </button>
+                        
+                        <!-- Button to save changes (displayed only in edit mode) -->
+                        <button *ngIf="editMode[i]" (click)="saveChanges(i, user)">Kaydet</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+        </div>
+    </div>
+    <div *ngIf="updateStatus" class="alert alert-success">{{ updateStatus }}</div>
+
+    <!-- Pie Chart -->
+    <div class="col-xl-4 col-lg-5">
+       
+    </div>
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+ 
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/chart.js/Chart.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/chart-area-demo.js"></script>
+    <script src="js/demo/chart-pie-demo.js"></script>
+
+  </div>
+</body>
+
+</html>

@@ -14,6 +14,7 @@ export class UserService {
   private loginStatus = new Subject<string>();
   private transactionStatus = new Subject<string>(); 
   private transactionStatus_coin = new Subject<string>(); 
+  private updateStatus = new Subject<string>(); 
 
   private registerStatus = new Subject<string>();
   private registerBoolean = false;
@@ -109,6 +110,7 @@ export class UserService {
         }
       }
     }
+    this.login(this.user.username, this.user.password);
   }
 
   public buy(volume_of_coin:string, coin_name:string, volume_of_dolar:string){
@@ -201,6 +203,35 @@ export class UserService {
     this.authService.logout();
     this.user = null;
 
+  }
+
+  public getAllUsers(){
+    const apiUrl = 'http://localhost:8080/api/users/getAll';
+
+    return this.http.get<any[]>(apiUrl);
+  }
+
+  public updateUserDB(username:String, updatedUser:any){
+    const apiUrl = 'http://localhost:8080/api/users/update/'+username;
+
+    this.http.put<User>(apiUrl, updatedUser).subscribe(
+      (response: User) => {
+        if(username === this.user.username){
+          this.setUser(response);
+          this.setLoginStatusInLocalStorage(true, response);
+          this.updateStatus.next("Değişiklikler Kayit Edildi");
+        }
+      },
+      (error) => {
+        console.error("Update error:", error);
+        this.updateStatus.next("Değişiklikler kayit edilmedi, lütfen tekrar deneyiniz!")
+      }
+    )
+
+  }
+
+  getUpdateStatus(){
+    return this.updateStatus.asObservable();
   }
 
   getLoginStatus() {

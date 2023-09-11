@@ -8,9 +8,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { RegisterComponent } from './components/register/register.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { TransactionComponent } from './components/transaction/transaction.component';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
+import { AdminComponent } from './components/admin/admin.component'; 
 
 const routes: Routes = [
+  {path: 'admin', component:AdminComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'dashboard', component: DashboardComponent, children:
       [
@@ -24,7 +26,7 @@ const routes: Routes = [
   { path: '**', redirectTo: '' }
 ]
 @NgModule({
-  declarations: [AppComponent, LoginComponent, DashboardComponent, RegisterComponent, ProfileComponent, TransactionComponent], // Include LoginComponent here
+  declarations: [AppComponent, LoginComponent, DashboardComponent, RegisterComponent, ProfileComponent, TransactionComponent, AdminComponent], // Include LoginComponent here
   imports: [RouterModule.forRoot(routes), BrowserModule, HttpClientModule, FormsModule],
   bootstrap: [AppComponent],
 })

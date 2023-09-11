@@ -6,6 +6,8 @@ import com.example.mens1s.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -25,5 +27,10 @@ public class UserService {
     public void saveUser(User user) {
         user.setPassword(user.getPassword());
         userRepository.save(user);
+    }
+
+    @Transactional
+    public List<User> getAllUsers(){
+        return userRepository.findAll();
     }
 }

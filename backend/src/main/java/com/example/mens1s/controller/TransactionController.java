@@ -71,7 +71,7 @@ public class TransactionController {
 
         if(user == null) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
 
-        // if does not have stock
+        // if it does not have stock
         if(!user.getWallet().getBalances().containsKey(transaction.getCoin_name()))
             return new ResponseEntity<>("You do not have this stock", HttpStatus.BAD_REQUEST);
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin("http://localhost:4200")
@@ -72,6 +73,43 @@ public class UserController {
             return new ResponseEntity<>(user, HttpStatus.OK);
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<List<User>> getUsers(){
+
+        List<User> users= userService.getAllUsers();
+
+        if(!users.isEmpty())
+            return new ResponseEntity<>(users, HttpStatus.OK);
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PutMapping("/update/{username}")
+    public ResponseEntity<User> updateUser(@PathVariable String username, @RequestBody User updatedUser){
+        User existingUser = userService.findByUsername(username);
+
+        if(existingUser == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        existingUser.setName(updatedUser.getName());
+        existingUser.setUsername(updatedUser.getUsername());
+        existingUser.setPhone(updatedUser.getPhone());
+        existingUser.setBalance(updatedUser.getBalance());
+
+        userService.saveUser(existingUser);
+
+        // update wallet
+        Map<String, Double> walletBalances = existingUser.getWallet().getBalances();
+        walletBalances.put("dollar", Double.parseDouble(existingUser.getBalance()));
+
+        Wallet existingWallet = existingUser.getWallet();
+        existingWallet.setBalances(walletBalances);
+
+        walletService.saveWallet(existingWallet);
+
+        return ResponseEntity.ok(existingUser);
     }
 
 }

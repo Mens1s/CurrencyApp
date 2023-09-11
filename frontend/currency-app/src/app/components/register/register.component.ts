@@ -29,8 +29,11 @@ export class RegisterComponent implements OnInit {
   }
   public async register(firstName :string, lastName :string, username: string, tel :string, email :string, password :string, passwordRetype :string){
     this.userService.register(firstName,lastName,username,tel,email,password,passwordRetype);
-    await this.delay(100);
-    this.router.navigate(['']);
+    if(this.userService.getRegisterBoolean()){
+      await this.delay(100);
+      this.router.navigate(['']);
+    }
+    
 
   }
 }

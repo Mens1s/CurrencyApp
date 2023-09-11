@@ -36,8 +36,14 @@ export class LoginComponent implements OnInit {
 
   async login(username: String, password: String){
     await this.userService.login(username, password);
+
     await this.delay(1000);
-    this.router.navigate(['dashboard']);
+
+    if(this.authService.isLoggedIn())
+
+      this.router.navigate(['dashboard']);
+    
+    
   }
   
 
