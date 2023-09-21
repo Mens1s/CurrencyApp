@@ -19,7 +19,7 @@ public class CurrenciesController {
 
     @GetMapping
     public ResponseEntity<String> getCurrencies(){
-
+        // belki farkli para birimleri eklenirse 1 degisken olur ve bunu ulkenin koduna gore updateleriz
         Currencies currencies = currenciesServices.findByCurrenciesId((long)1);
 
         if(currencies != null)

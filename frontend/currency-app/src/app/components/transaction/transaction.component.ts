@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/common/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { CurrenciesService } from 'src/app/services/currencies.service';
 import { UserService } from 'src/app/services/user.service';
+declare var TradingView: any; // Declare TradingView as a global variable
 
 @Component({
   selector: 'app-transaction',
   templateUrl: './transaction.component.html',
   styleUrls: ['./transaction.component.css', '../dashboard/css/sb-admin-2.min.css', '../dashboard/vendor/fontawesome-free/css/all.min.css']
 })
-export class TransactionComponent implements OnInit {
+export class TransactionComponent implements AfterViewInit {
 
   public definedCurr: any;
   public currName: any;
@@ -35,15 +37,12 @@ export class TransactionComponent implements OnInit {
 
   constructor(private userService: UserService, 
     private currService: CurrenciesService, 
-    private authService: AuthService, 
-    private router: Router, 
-    private route: ActivatedRoute
     ) 
   {
-
+      
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     const info : string= this.currService.getUpdatedInformations();
     this.user = this.userService.getUser();
     this.balance = +this.user.balance;
@@ -52,6 +51,7 @@ export class TransactionComponent implements OnInit {
 
     this.currService.getInfoStatus().subscribe((info) => {
       this.update(info);
+      this.loadTradingViewScript();
     })
  
     this.userService.getTransactionStatus().subscribe((transactionStatus) => {
@@ -81,6 +81,38 @@ export class TransactionComponent implements OnInit {
         this.transactionStatusClass = "alert-danger"
       }
   
+    });
+
+    this.loadTradingViewScript();
+  }
+
+  loadTradingViewScript() {
+    const script = document.createElement('script');
+    script.src = 'https://s3.tradingview.com/tv.js';
+    script.async = true;
+
+    script.onload = () => {
+      // The script has loaded, you can now initialize the TradingView widget here
+      this.initializeTradingViewWidget();
+    };
+
+    document.head.appendChild(script);
+  }
+
+  initializeTradingViewWidget() {
+    // Initialize the TradingView widget here
+    new TradingView.widget({
+      "width": 980,
+      "height": 610,
+      "symbol": "CRYPTOCAP:"+this.currName,
+      "interval": "D",
+      "timezone": "Etc/UTC",
+      "theme": "light",
+      "style": "1",
+      "locale": "en",
+      "enable_publishing": true,
+      "allow_symbol_change": true,
+      "container_id": "tradingview_abc2e"
     });
   }
 

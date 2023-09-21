@@ -29,7 +29,7 @@ export class AdminComponent implements OnInit {
       this.router.navigate([""]);
     
     this.loadUsers();
-    
+
   }
 
   private loadUsers(){

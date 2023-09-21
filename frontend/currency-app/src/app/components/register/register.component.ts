@@ -6,7 +6,7 @@ import { UserService } from 'src/app/services/user.service';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css', './css/sb-admin-2.min.css', './vendor/fontawesome-free/css/all.min.css']
+  styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
   public registerStatus: string | null = null;
@@ -21,6 +21,7 @@ export class RegisterComponent implements OnInit {
     else{
       this.userService.getRegisterStatus().subscribe((registerStatus) => {
         this.registerStatus = registerStatus;
+        
       })
     }
   }
@@ -29,11 +30,10 @@ export class RegisterComponent implements OnInit {
   }
   public async register(firstName :string, lastName :string, username: string, tel :string, email :string, password :string, passwordRetype :string){
     this.userService.register(firstName,lastName,username,tel,email,password,passwordRetype);
-    if(this.userService.getRegisterBoolean()){
-      await this.delay(100);
-      this.router.navigate(['']);
-    }
-    
+    await this.delay(1000);
 
+    if(this.registerStatus != "Kullanici adi kullanılmaktadır.")
+      this.router.navigate(['dashboard']);
+    
   }
 }

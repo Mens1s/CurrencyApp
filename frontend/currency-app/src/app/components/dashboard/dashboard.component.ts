@@ -1,22 +1,22 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { Transaction, User } from 'src/app/common/user';
+import { User } from 'src/app/common/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { CurrenciesService } from 'src/app/services/currencies.service';
 import { UserService } from 'src/app/services/user.service';
+import { interval, switchMap, startWith, take } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css', './css/sb-admin-2.min.css', './vendor/fontawesome-free/css/all.min.css']
+  styleUrls: ['./dashboard.component.css']
 
 })
 export class DashboardComponent implements OnInit {
   public user = new User();
   public transactionNumber = 0;
   public curr : any;
-
+  public currenciesUpdate: string | null = null;
 
   constructor(private userService: UserService, 
               private currService: CurrenciesService, 
@@ -47,7 +47,14 @@ export class DashboardComponent implements OnInit {
     this.loadCurr();
   
     this.router.navigate(["dashboard"])
-    
+    interval(5000)
+    .pipe(
+      startWith(0),
+      switchMap(() => this.currService.getCurrencies().pipe(take(1)).toPromise())
+    )
+    .subscribe((data) => {
+      this.curr = data;
+    });
   }
   
   async loadCurr(){

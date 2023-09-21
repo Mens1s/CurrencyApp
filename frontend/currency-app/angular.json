@@ -23,7 +23,9 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/css/sb-admin-2.min.css",
+              "src/vendor/fontawesome-free/css/all.min.css"
              ],
             "scripts": []
           },

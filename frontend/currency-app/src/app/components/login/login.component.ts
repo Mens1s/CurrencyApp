@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css', './css/sb-admin-2.min.css', './vendor/fontawesome-free/css/all.min.css']
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
   public loginStatus: string | null = null;

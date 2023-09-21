@@ -82,14 +82,27 @@
                             <th scope="col">İşlem Türü</th>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let transaction of user.transactions" [class.table-success]="transaction.type === 'buy'" [class.table-danger]="transaction.type !== 'buy'">
+                            <ng-container *ngFor="let transaction of user.transactions.slice(startIndex, endIndex); let i = index">
+                              <tr [class.table-success]="transaction.type === 'buy'" [class.table-danger]="transaction.type !== 'buy'">
                                 <td>{{ transaction.id }}</td>
                                 <td>{{ transaction.coin_name }}</td>
                                 <td>{{ transaction.volume_of_coin }}</td>
                                 <td>{{ transaction.volume_of_dolar }}</td>
                                 <td>{{ transaction.type }}</td>
+                              </tr>
+                            </ng-container>
+                          </tbody>
+                          
+                          <tfoot>
+                            <tr>
+                              <td colspan="5">
+                                <div class="d-flex justify-content-between">
+                                  <button class="btn btn-primary" (click)="previous()" [disabled]="currentPage === 1">Previous</button>
+                                  <button class="btn btn-primary" (click)="next()" [disabled]="currentPage === totalPages">Next</button>
+                                </div>
+                              </td>
                             </tr>
-                        </tbody>
+                          </tfoot>
                     </table>
                     
                 </div>
@@ -98,9 +111,24 @@
 
         <!-- Pie Chart -->
         <div class="col-xl-4 col-lg-5">
-           
-        </div>
-
+            <div class="card shadow mb-4">
+              <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Adet Olarak Dağılım Grafiği</h6>
+              </div>
+              <div class="card-body">
+                <canvas #pieChart></canvas>
+              </div>
+            </div>
+            <br>
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Fiyat Olarak Dağılım Grafiği</h6>
+                </div>
+                <div class="card-body">
+                  <canvas #pieChartPrice></canvas>
+                </div>
+              </div>
+          </div>
     <!-- Content Row -->
     
 

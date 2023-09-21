@@ -1,19 +1,19 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Currencies } from '../common/currencies';
-import { Observable, Subject, catchError, map, throwError } from 'rxjs';
+import { Observable, Subject, catchError, map, throwError, interval, switchMap, startWith, take } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CurrenciesService {
+export class CurrenciesService{
   private currencies: any;
   private currentTransaction: any;
   private infoStatus = new Subject<string>(); 
 
-
   constructor(private http: HttpClient) {
    }
+  
 
   public getCurrencies(): Observable<any> {
     const url = "http://localhost:8080/api/currencies";
@@ -27,6 +27,7 @@ export class CurrenciesService {
         if (startIndex !== -1 && endIndex !== -1) {
           const jsonString = response.substring(startIndex, endIndex + 1);
           const jsonData = JSON.parse(jsonString);
+  
           this.setCurrencies(jsonData);
           return jsonData;
         }
@@ -40,12 +41,15 @@ export class CurrenciesService {
 
   private setCurrencies(curr: any) {
     this.currencies = curr;
-    console.log(this.currencies);
   }
 
   public async getCurr(): Promise<any> {
     // Convert the Observable to a Promise
     await this.getCurrencies().toPromise();
+    return this.currencies;
+  }
+
+  public getCurrNUpdated(){
     return this.currencies;
   }
 
@@ -61,4 +65,5 @@ export class CurrenciesService {
   public getUpdatedInformations(){
     return this.currentTransaction;
   }
+
 }

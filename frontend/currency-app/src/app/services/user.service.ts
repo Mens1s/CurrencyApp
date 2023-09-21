@@ -66,12 +66,14 @@ export class UserService {
 
       this.http.post<User>(url, registerData).subscribe(
         (response: User) => {
-          this.registerStatus.next("Kayıt Olma Başarılı!");
-          this.registerBoolean = true;
           this.login(username,password);
+          this.registerBoolean = true;
+          this.registerStatus.next("Kayıt Olma Başarılı!");
+        
+          
         },
         (error) => {
-          console.error("Login error:", error);
+          console.error("Register error:", error);
           this.registerStatus.next("Kullanici adi kullanılmaktadır."),
           this.registerBoolean = false;
         }
@@ -109,8 +111,9 @@ export class UserService {
           localStorage.removeItem('loginData');
         }
       }
+      this.login(this.user.username, this.user.password);
+
     }
-    this.login(this.user.username, this.user.password);
   }
 
   public buy(volume_of_coin:string, coin_name:string, volume_of_dolar:string){
