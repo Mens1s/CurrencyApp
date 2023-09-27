@@ -98,7 +98,29 @@
                 
             </div>
         </div>
-        
+        <div class="card-body">
+            <h3>Son Yapılan İşlemler</h3>
+
+            <table class="table table-borderless">
+                <thead>
+                    <th scope="col">Dolar Hacmi</th>
+                    <th scope="col">Coin Adeti</th>
+                    <th scope="col">İşlem Türü</th>
+                </thead>
+
+                <tbody>
+                    <ng-container *ngFor="let row of reversedTransactionsArray">
+                      <tr [class.table-success]="row[2] === 'buy'" [class.table-danger]="row[2] !== 'buy'">
+                        <td>{{ row[0]}}</td>
+                        <td>{{ row[1] }}</td>
+                        <td>{{ row[2] }}</td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                  
+            </table>
+            
+        </div>
     </div>
     
 </div>

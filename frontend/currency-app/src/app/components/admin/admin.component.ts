@@ -20,6 +20,7 @@ export class AdminComponent implements OnInit {
   ngOnInit(): void {
     this.userService.getUpdateStatus().subscribe((updateStatus) => {
       this.updateStatus = updateStatus;
+      this.loadUsers();
     })
     this.userService.checkLoginStatus();
     const user = this.userService.getUser();
@@ -55,4 +56,15 @@ export class AdminComponent implements OnInit {
     this.editMode[index] = false;
   }
   
+  public deleteUser(username: String){
+    const isConfirmed = window.confirm(`${username} adlı kullanıcıyı silmek istediğine emin misin?`);
+
+    if (isConfirmed) {
+      this.userService.deleteUser(username);
+    }
+  }
+
+  public goToMainPage(){
+    this.router.navigate(["/"])
+  }
 }

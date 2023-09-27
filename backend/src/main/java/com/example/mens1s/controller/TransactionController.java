@@ -8,10 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
-@CrossOrigin("http://localhost:4200")
+
 @RestController
 @RequestMapping("/api/transactions")
+@CrossOrigin("http://localhost:4200")
 public class TransactionController {
 
     private TransactionService transactionService;
@@ -112,5 +114,26 @@ public class TransactionController {
 
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/list/{criptoName}")
+    public ResponseEntity<String> getTransactionByCriptoName(@PathVariable String criptoName){
+
+        List<Transaction> transaction = transactionService.findByCriptoName(criptoName);
+
+
+        if(transaction.size() == 0){
+            return new ResponseEntity<>("There is no transaction", HttpStatus.NOT_FOUND);
+        }
+        String response = "[";
+        for(Transaction t : transaction){
+
+            response += "[" + t.getVolume_of_dolar() + "," + t.getVolume_of_coin() + "," + '"'  + t.getType() + '"' + "],";
+        }
+        response = response.substring(0, response.length() - 1);
+        response += "]";
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 }

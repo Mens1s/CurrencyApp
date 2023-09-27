@@ -222,8 +222,23 @@ export class UserService {
         if(username === this.user.username){
           this.setUser(response);
           this.setLoginStatusInLocalStorage(true, response);
-          this.updateStatus.next("Değişiklikler Kayit Edildi");
         }
+        this.updateStatus.next("Değişiklikler Kayit Edildi");
+      },
+      (error) => {
+        console.error("Update error:", error);
+        this.updateStatus.next("Değişiklikler kayit edilmedi, lütfen tekrar deneyiniz!")
+      }
+    )
+
+  }
+
+  public deleteUser(username:String){
+    const apiUrl = 'http://localhost:8080/api/users/delete/'+username;
+
+    this.http.delete<User>(apiUrl).subscribe(
+      () => {
+        this.updateStatus.next("Değişiklikler Kayit Edildi");
       },
       (error) => {
         console.error("Update error:", error);

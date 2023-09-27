@@ -13,6 +13,9 @@ declare var TradingView: any; // Declare TradingView as a global variable
   styleUrls: ['./transaction.component.css', '../dashboard/css/sb-admin-2.min.css', '../dashboard/vendor/fontawesome-free/css/all.min.css']
 })
 export class TransactionComponent implements AfterViewInit {
+  public transactions: any[] = [];
+  public transactionsArray: any[][] = [];
+  public reversedTransactionsArray: any[][] = [];
 
   public definedCurr: any;
   public currName: any;
@@ -36,11 +39,7 @@ export class TransactionComponent implements AfterViewInit {
   public availableCurrency : number = 0;
 
   constructor(private userService: UserService, 
-    private currService: CurrenciesService, 
-    ) 
-  {
-      
-  }
+    private currService: CurrenciesService) {}
 
   ngAfterViewInit(): void {
     const info : string= this.currService.getUpdatedInformations();
@@ -52,6 +51,7 @@ export class TransactionComponent implements AfterViewInit {
     this.currService.getInfoStatus().subscribe((info) => {
       this.update(info);
       this.loadTradingViewScript();
+      this.getCryptoTransactions(info);
     })
  
     this.userService.getTransactionStatus().subscribe((transactionStatus) => {
@@ -80,10 +80,18 @@ export class TransactionComponent implements AfterViewInit {
       }else{
         this.transactionStatusClass = "alert-danger"
       }
-  
+      
     });
 
+    this.currService.getCurrenciesBuySellStatus().subscribe((data) => {
+      this.transactionsArray = JSON.parse(data);
+      this.reversedTransactionsArray = this.transactionsArray.slice().reverse();
+
+    })
+
     this.loadTradingViewScript();
+    this.getCryptoTransactions(this.currName);
+    
   }
 
   loadTradingViewScript() {
@@ -104,7 +112,7 @@ export class TransactionComponent implements AfterViewInit {
     new TradingView.widget({
       "width": 980,
       "height": 610,
-      "symbol": "CRYPTOCAP:"+this.currName,
+      "symbol": this.currName+"USD",
       "interval": "D",
       "timezone": "Etc/UTC",
       "theme": "light",
@@ -149,6 +157,16 @@ export class TransactionComponent implements AfterViewInit {
     }else{
       this.affordableStatusClass = "alert-success";
     }
+  }
+
+  getCryptoTransactions(cryptoName: string): void {
+    this.currService.getTransactionsByCryptoName(this.currName);
+  }
+
+  getBackgroundColor(type: string): string {
+    // Define your logic to determine the background color based on the type
+    // For example, if the type is 'buy', set it to green; if 'sell', set it to red.
+    return type === 'buy' ? 'green' : (type === 'sell' ? 'red' : '');
   }
 
   public buy(){

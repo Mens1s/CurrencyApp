@@ -85,6 +85,17 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @DeleteMapping("/delete/{username}")
+    public ResponseEntity<User> deleteUser(@PathVariable String username){
+        User existingUser = userService.findByUsername(username);
+
+        if(existingUser == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        userService.deleteUser(existingUser);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
     @PutMapping("/update/{username}")
     public ResponseEntity<User> updateUser(@PathVariable String username, @RequestBody User updatedUser){
         User existingUser = userService.findByUsername(username);

@@ -34,11 +34,11 @@
                 class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Admin İşlemleri</h6>
                 <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-
+                  <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    (click)="goToMainPage()">
+                    <i class="fas fa-home fa-sm fa-fw text-gray-400"></i>
+                  </a>
                 </div>
             </div>
             <!-- Card Body -->
@@ -51,6 +51,7 @@
                     <th scope="col">Kullanıcı Telefon Numarası</th>
                     <th scope="col">Kullanıcı Bakiyesi</th>
                     <th scope="col">İşlemler</th> <!-- Add a new header column for actions -->
+                    <th scope="col">Delete</th> <!-- Add a new header column for actions -->
                   </thead>
                   <tbody>
                     <!-- Loop through the users and display each user in a row -->
@@ -104,6 +105,9 @@
                         
                         <!-- Button to save changes (displayed only in edit mode) -->
                         <button *ngIf="editMode[i]" (click)="saveChanges(i, user)">Kaydet</button>
+                      </td>
+                      <td>
+                        <button  (click)="deleteUser(user.username)">Kullanıcı Sil</button>
                       </td>
                     </tr>
                   </tbody>

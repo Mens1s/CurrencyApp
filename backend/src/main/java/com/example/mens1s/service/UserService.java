@@ -33,4 +33,9 @@ public class UserService {
     public List<User> getAllUsers(){
         return userRepository.findAll();
     }
+
+    @Transactional
+    public void deleteUser(User user){
+        userRepository.delete(user);
+    }
 }

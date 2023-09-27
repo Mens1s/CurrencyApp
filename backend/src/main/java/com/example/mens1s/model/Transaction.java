@@ -22,8 +22,10 @@ public class Transaction {
 
     @Column(name="volume_of_coin")
     private String volume_of_coin;
+
     @Column(name="coin_name")
     private String coin_name;
+
     @Column(name="volume_of_dolar")
     private String volume_of_dolar;
 
