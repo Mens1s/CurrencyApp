@@ -1,8 +1,8 @@
 package com.example.mens1s.controller;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.example.mens1s.model.User;
 import com.example.mens1s.model.Wallet;
-import com.example.mens1s.repository.WalletRepository;
 import com.example.mens1s.request.LoginRequest;
 import com.example.mens1s.service.UserService;
 import com.example.mens1s.service.WalletService;
@@ -22,10 +22,13 @@ public class UserController {
     private UserService userService;
     private WalletService walletService;
 
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Autowired
-    public UserController(UserService userService, WalletService walletService) {
+    public UserController(UserService userService, WalletService walletService, BCryptPasswordEncoder bCryptPasswordEncoder){
         this.userService = userService;
         this.walletService = walletService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @PostMapping("/register")
@@ -35,11 +38,14 @@ public class UserController {
         if(userService.findByUsername(user.getUsername()) != null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
+        // encode password
+        String hashedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+        user.setPassword(hashedPassword);
+
         Wallet wallet = new Wallet();
         Map<String, Double> initialBalance = new HashMap<>();
         initialBalance.put("dollar", 10000.0);
         wallet.setBalances(initialBalance);
-
 
         user.setWallet(wallet);
         user.setBalance("10000.0");
@@ -52,14 +58,22 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest) {
-
+        System.out.println("selaamm");
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
 
         User userFromDb = userService.findByUsername(username);
 
+        // for users which has registered before hashing password
+        System.out.println("selaamm2");
+        System.out.println(username + password + userFromDb);
         if(userFromDb != null && userFromDb.getPassword().equals(password))
             return new ResponseEntity<>(userFromDb, HttpStatus.OK);
+        System.out.println("selaamm2");
+        // hashed password control
+        if(userFromDb != null && bCryptPasswordEncoder.matches(password, userFromDb.getPassword()))
+            return new ResponseEntity<>(userFromDb, HttpStatus.OK);
+        System.out.println("selaamm2");
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

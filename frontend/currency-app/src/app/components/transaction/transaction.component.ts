@@ -1,12 +1,10 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, AfterViewInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { User } from 'src/app/common/user';
-import { AuthService } from 'src/app/services/auth.service';
 import { CurrenciesService } from 'src/app/services/currencies.service';
 import { UserService } from 'src/app/services/user.service';
-declare var TradingView: any; // Declare TradingView as a global variable
 
+declare var TradingView: any; // Declare TradingView as a global variable
 @Component({
   selector: 'app-transaction',
   templateUrl: './transaction.component.html',
@@ -39,7 +37,8 @@ export class TransactionComponent implements AfterViewInit {
   public availableCurrency : number = 0;
 
   constructor(private userService: UserService, 
-    private currService: CurrenciesService) {}
+    private currService: CurrenciesService,
+    private router: Router) {}
 
   ngAfterViewInit(): void {
     const info : string= this.currService.getUpdatedInformations();
@@ -131,8 +130,10 @@ export class TransactionComponent implements AfterViewInit {
     const jsonObject = JSON.parse(this.user.wallet.balancesJson)
     
     const myMap = new Map(Object.entries(jsonObject));
-        
-    if(!(myMap.get(this.currName) == undefined)) {
+    if(isNaN(this.currPrice)){
+      this.router.navigate([""])
+    }
+    else if(!(myMap.get(this.currName) == undefined)) {
       this.availableCurrency = +(myMap.get(this.currName) as number);
     }
   }

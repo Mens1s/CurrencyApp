@@ -34,6 +34,13 @@ export class DashboardComponent implements OnInit {
     
     if (this.user) {
       this.transactionNumber = this.user.transactions ? this.user.transactions.length : 0;
+      if(this.transactionNumber > 0){
+        this.user.transactions.forEach((number, index) => {
+          const parsedValue = parseFloat(number.volume_of_dolar);
+          const roundedValue = isNaN(parsedValue) ? 0 : parsedValue.toFixed(2);
+          this.user.transactions[index].volume_of_dolar = roundedValue.toString();
+        })
+      }
     } else {
       this.transactionNumber = 0;
     }
@@ -56,7 +63,7 @@ export class DashboardComponent implements OnInit {
       this.curr = data;
     });
   }
-  
+
   async loadCurr(){
     this.curr = await this.currService.getCurr();
   }

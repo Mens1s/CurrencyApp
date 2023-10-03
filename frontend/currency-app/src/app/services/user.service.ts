@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
-import { Transaction, User } from '../common/user'; // Import the User model
-import { map } from 'rxjs/operators'; // Import the map operator
+import { Subject } from 'rxjs';
+import { User } from '../common/user'; // Import the User model
 import { AuthService } from './auth.service';
+import { CsrfService } from './csrf.service';
 
 @Injectable({
   providedIn: 'root',
 })
+
+
 export class UserService {
   private user: any;
 
@@ -19,33 +21,40 @@ export class UserService {
   private registerStatus = new Subject<string>();
   private registerBoolean = false;
 
-  constructor(private http: HttpClient,private authService: AuthService) {}
+  constructor(private http: HttpClient,private authService: AuthService,private csrfService :CsrfService) {}
 
 
-  public login(username: String, password: String){
+  public login(username: String, password: String) {
     event?.preventDefault();
-
-    const loginData = {
-      username: username, 
-      password: password
-    };
-
-    const url = "http://localhost:8080/api/users/login";
-
-    this.http.post<User>(url, loginData).subscribe(
-      (response: User) => {
-        this.setUser(response);
-        this.loginStatus.next("Giriş Başarılı!");
-        this.authService.login();
-        this.setLoginStatusInLocalStorage(true, response);
-      },
-      (error) => {
-        console.error("Login error:", error);
-        this.loginStatus.next("Kullanici adi ya da şifre hatali!")
+  
+    this.csrfService.getCsrfToken().subscribe(csrfToken => {
+      const loginData = {
+        username: username,
+        password: password
+      };
+  
+      const url = "http://localhost:8080/api/users/login";
+  
+      const headers = {
+        'Content-Type': 'application/json',
+        'X-XSRF-TOKEN': csrfToken
       }
-    )
-
+  
+      this.http.post<User>(url, loginData, { headers }).subscribe(
+        (response: User) => {
+          this.setUser(response);
+          this.loginStatus.next("Giriş Başarılı!");
+          this.authService.login();
+          this.setLoginStatusInLocalStorage(true, response);
+        },
+        (error) => {
+          console.error("Login error:", error);
+          this.loginStatus.next("Kullanici adi ya da şifre hatali!")
+        }
+      );
+    });
   }
+  
 
   public register(firstName :string, lastName :string, username: string, tel :string, email :string, password :string, passwordRetype :string){
     event?.preventDefault();
@@ -245,8 +254,9 @@ export class UserService {
         this.updateStatus.next("Değişiklikler kayit edilmedi, lütfen tekrar deneyiniz!")
       }
     )
-
   }
+
+  
 
   getUpdateStatus(){
     return this.updateStatus.asObservable();
